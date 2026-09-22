@@ -1,6 +1,6 @@
 """Заготовки задач на NumPy."""
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from grader_contracts.numpy_tasks import (
     BinarizeInput, ChessInput, EllipseInput, MatrixInput, MatrixStatistics,
     MatrixVectorBatchInput, OneHotInput, RandomMatrixInput, RectangleInput,
@@ -40,18 +40,18 @@ def matrix_statistics(data: RandomMatrixInput) -> MatrixStatistics:
         column_variances=np.var(matrix, axis=0),
     )
 
-def plot_histograms(stats: MatrixStatistics):
-    fig, axes = plt.subplots(2, 2, figsize=(10, 8))
-    axes[0, 0].hist(stats.row_means, bins=10, color='blue', alpha=0.7)
-    axes[0, 0].set_title("Row Means")
-    axes[0, 1].hist(stats.column_means, bins=10, color='green', alpha=0.7)
-    axes[0, 1].set_title("Column Means")
-    axes[1, 0].hist(stats.row_variances, bins=10, color='red', alpha=0.7)
-    axes[1, 0].set_title("Row Variances")
-    axes[1, 1].hist(stats.column_variances, bins=10, color='purple', alpha=0.7)
-    axes[1, 1].set_title("Column Variances")
-    plt.tight_layout()
-    plt.show()
+# def plot_histograms(stats: MatrixStatistics):
+#     fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+#     axes[0, 0].hist(stats.row_means, bins=10, color='blue', alpha=0.7)
+#     axes[0, 0].set_title("Row Means")
+#     axes[0, 1].hist(stats.column_means, bins=10, color='green', alpha=0.7)
+#     axes[0, 1].set_title("Column Means")
+#     axes[1, 0].hist(stats.row_variances, bins=10, color='red', alpha=0.7)
+#     axes[1, 0].set_title("Row Variances")
+#     axes[1, 1].hist(stats.column_variances, bins=10, color='purple', alpha=0.7)
+#     axes[1, 1].set_title("Column Variances")
+#     plt.tight_layout()
+#     plt.show()
 
 def chess(data: ChessInput) -> np.ndarray:
     rows, columns, first, second = data.rows, data.columns, data.first, data.second
@@ -122,76 +122,3 @@ def one_hot(data: OneHotInput) -> np.ndarray:
     for idx, label in enumerate(labels):
         one_hot_matrix[idx, label] = 1
     return one_hot_matrix
-
-
-if __name__ == "__main__":
-    
-    # 1. Сумма произведений матриц на векторы
-    matrices = [np.array([[1, 2], [3, 4]]), np.array([[5, 6], [7, 8]])]
-    vectors = [np.array([[1], [2]]), np.array([[3], [4]])]
-    data = MatrixVectorBatchInput(matrices=matrices, vectors=vectors)
-    result = sum_prod(data)
-    assert result.shape == (2, 1)
-    assert np.array_equal(result, np.array([[44], [64]]))
-
-    # 2. Бинаризация матрицы
-    matrix = np.array([[0.3, 0.7], [1.2, -0.5]])
-    data = BinarizeInput(matrix=matrix, threshold=0.5)
-    result = binarize(data)
-    assert np.array_equal(result, np.array([[0, 1], [1, 0]]))
-
-    # 3. Уникальные элементы строк и столбцов
-    matrix = np.array([[1, 2, 2], [4, 5, 6]])
-    data = MatrixInput(matrix=matrix)
-    
-    rows_result = unique_rows(data)
-    assert rows_result == [[1.0, 2.0], [4.0, 5.0, 6.0]]
-    
-    cols_result = unique_columns(data)
-    assert len(cols_result) == 3
-
-    # 4. Статистики случайной матрицы
-    data = RandomMatrixInput(rows=3, columns=4, seed=42)
-    stats = matrix_statistics(data)
-    assert stats.matrix.shape == (3, 4)
-    assert len(stats.row_means) == 3
-    #plot_histograms(stats)
-  
-    # 5. Шахматная матрица
-    data = ChessInput(rows=3, columns=3, first=0.0, second=1.0)
-    board = chess(data)
-    assert board.shape == (3, 3)
-    assert board[0, 0] == 0.0
-    assert board[0, 1] == 1.0
-
-    # 6. Прямоугольник и эллипс
-    rect = RectangleInput(
-        width=3, height=2,
-        image_height=5, image_width=5,
-        shape_color=(255, 0, 0),
-        background_color=(0, 0, 0)
-    )
-    img_rect = draw_rectangle(rect)
-    assert img_rect.shape == (5, 5, 3)
-    
-    ellipse = EllipseInput(
-        semi_axis_x=2, semi_axis_y=1,
-        image_height=5, image_width=5,
-        shape_color=(0, 255, 0),
-        background_color=(0, 0, 0)
-    )
-    img_ellipse = draw_ellipse(ellipse)
-    assert img_ellipse.shape == (5, 5, 3)
-
-    # 7. Анализ временного ряда
-    series = TimeSeriesInput(values=[1, 3, 2, 4, 1], window=2)
-    stats = analyze_time_series(series)
-    assert stats.local_maxima_indices == [1, 3]
-    assert stats.local_minima_indices == [2]
-
-    # 8. One-hot encoding
-    labels = np.array([0, 1, 2])
-    data = OneHotInput(labels=labels, class_count=None)
-    result = one_hot(data)
-    assert result.shape == (3, 3)
-    assert np.array_equal(result, np.eye(3, dtype=np.int64))
