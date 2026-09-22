@@ -155,8 +155,8 @@ if __name__ == "__main__":
     stats = matrix_statistics(data)
     assert stats.matrix.shape == (3, 4)
     assert len(stats.row_means) == 3
-    plot_histograms(stats)
-
+    #plot_histograms(stats)
+  
     # 5. Шахматная матрица
     data = ChessInput(rows=3, columns=3, first=0.0, second=1.0)
     board = chess(data)
