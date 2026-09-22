@@ -65,6 +65,8 @@ def prime_factorization(data: PositiveIntegerInput) -> str:
 
 def pyramid(data: PositiveIntegerInput) -> int | str:
     number = data.value
+    if number <= 0:
+        return "It is impossible"
     n = 0
     total = 0
     while total < number:
